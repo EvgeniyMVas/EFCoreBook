@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Book>
+
+@{
+
+    ViewBag.Title = "Все пользователи";
+
+}
+<style>
+    body {
+        position: relative;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('@Url.Content("~/images/fon.jpg")');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+    .table-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+</style>
+<a asp-action="Create" class="btn btn-primary">Добавить книгу</a>
+<div class="col p-3"></div>
+<div class="row table-container">
+    <table class="table table-success table-striped">
+        <tr><th>Название книги</th><th>Автор</th><th>Жанр</th><th>Цена  грн.</th><th></th></tr>
+        <tbody class="table-group-divider">
+        @foreach (var item in Model)
+
+        {
+            <tr><td>@item.Name</td><td>@item.Author</td><td>@item.Genre</td><td>@item.Price</td>
+             <td>
+                 <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id">Отзывы</a>
+             </td>   
+            </tr>
+
+        }
+        </tbody>
+    </table>
+</div>
+
+
+
+

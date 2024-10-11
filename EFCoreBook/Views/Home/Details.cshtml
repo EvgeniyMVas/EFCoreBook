@@ -1,0 +1,113 @@
+﻿@using EFCoreBook.ViewModels
+@model BookDetailsViewModel
+@{
+
+    ViewBag.Title = Model.Book.Name;
+
+}
+<style>
+    body {
+        position: relative;
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('@Url.Content("~/images/fon.jpg")');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+    .comments-container {
+        min-height: 150px; 
+        max-height: 150px; 
+        overflow-y: auto; 
+        border: 1px solid #ccc; 
+        padding: 10px; 
+        background-color: #f8f9fa; 
+    }
+
+</style>
+
+<div class="col p-3"></div>
+<div class="row table-container">
+    <table class="table table-success table-striped">
+        <tr><th>Название книги</th><th>Автор</th><th>Жанр</th><th>Цена  грн.</th></tr>
+        <tbody class="table-group-divider">
+
+            <tr>
+                <td>@Model.Book.Name</td>
+                <td>@Model.Book.Author</td>
+                <td>@Model.Book.Genre</td>
+                <td>@Model.Book.Price</td>
+               
+            </tr>
+        </tbody>
+    </table>   
+</div>
+
+<h3>Комментарии</h3>
+
+<div class="comments-container">
+    <ul class="list-group">
+        @if (Model.Book.Comments.Any())
+        {
+            @foreach (var comment in Model.Book.Comments)
+            {
+                <li class="list-group-item">
+                    @comment.Review <br />
+                    <p>@comment.Name</p>
+                </li>
+               
+            }
+        }
+        else
+        {
+            <li class="list-group-item">Отзывы отсутствуют</li>
+        }
+    </ul>
+</div>
+
+<h3>Оставить отзыв</h3>
+<div class="comments-container2">
+    <form asp-action="WriteAComment" asp-controller="Home" method="post">
+        <div class="form-group">
+            <label asp-for="Comment.Name" class="control-label">Ваше имя</label>
+            <input type="text" asp-for="Comment.Name" class="form-control" />
+            <span asp-validation-for="Comment.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Comment.Review" class="control-label">Ваш отзыв</label>
+            <textarea asp-for="Comment.Review" class="form-control"></textarea>
+            <span asp-validation-for="Comment.Review" class="text-danger"></span>
+        </div>
+
+        <!-- Передаем BookId через скрытое поле -->
+        <input type="hidden" asp-for="Comment.BookId" />
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Отправить" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-primary">Назад</a>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+@* <div class="comments-container2">
+    @{
+        await Html.RenderPartialAsync("WriteAComment", new Comment() { BookId = Model.Id });
+    }
+</div> *@
